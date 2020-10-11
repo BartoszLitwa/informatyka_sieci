@@ -1,18 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:sieci/screens/ip_address/ip_logic.dart';
+import 'package:sieci/screens/ip_address/subnet_item.dart';
 
 class SubnetsListView extends StatelessWidget {
-  final String ipAddress, subnetMask;
+  final String ip, subnetMask;
 
-  const SubnetsListView({Key key, this.ipAddress, this.subnetMask})
-      : super(key: key);
+  const SubnetsListView({Key key, this.ip, this.subnetMask}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     final int subnetMaskOnes = IPLogic.subnetMaskToInt(subnetMask);
-    return ListView.builder(
-      itemCount: IPLogic.numberOfSubnets(subnetMaskOnes),
-      itemBuilder: (buildContext, val) {},
+    return SizedBox(
+      height: size.height / 1.56 - 1,
+      width: size.width / 1.2,
+      child: ListView.builder(
+        itemCount: IPLogic.numberOfSubnets(subnetMaskOnes),
+        itemBuilder: (buildContext, val) {
+          final mask = subnetMaskOnes.toString();
+          final subNet = IPLogic.subnetAddress(ip, mask, subnet: val);
+          final broadcast = IPLogic.broadcastAddress(subNet, mask, subnet: val);
+          final firstHost = IPLogic.firstHostAddress(subNet, mask);
+          final lastHost = IPLogic.lastHostAddress(broadcast, mask);
+          final hosts = IPLogic.numberOfHosts(subnetMaskOnes);
+          return Column(
+            children: [
+              SubnetItem(
+                subnet: val,
+                subnetAddress: subNet,
+                broadcastAddress: broadcast,
+                firstHost: firstHost,
+                lastHost: lastHost,
+                numberOfHosts: hosts,
+              ),
+              const SizedBox(height: 15)
+            ],
+          );
+        },
+      ),
     );
   }
 }

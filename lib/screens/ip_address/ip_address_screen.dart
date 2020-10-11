@@ -12,6 +12,7 @@ class IpAddressScreen extends StatefulWidget {
 class _IpAddressScreenState extends State<IpAddressScreen> {
   final _formKey = GlobalKey<FormState>();
   String ipAddress, subnetMask;
+  bool _pressedOK = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,7 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                 child: Column(
                   children: [
                     TextFormField(
+                      autofocus: true,
                       decoration: InputDecoration(
                         // border: InputBorder.none,
                         hintText: '192.168.0.1',
@@ -80,12 +82,18 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                             builder: (context) => RaisedButton(
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
+                                  setState(() {
+                                    _pressedOK = true;
+                                  });
                                   Scaffold.of(context).showSnackBar(SnackBar(
                                       content: const Text(
                                     'Przetwarzanie danych!',
                                     style: const TextStyle(color: green),
                                   )));
                                 } else {
+                                  setState(() {
+                                    _pressedOK = false;
+                                  });
                                   Scaffold.of(context).showSnackBar(SnackBar(
                                       content: const Text(
                                     'Maska lub IP są nie poprawne!',
@@ -108,7 +116,9 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
           SizedBox(
             height: 10,
           ),
-          SubnetsListView(ipAddress: ipAddress, subnetMask: subnetMask),
+          _pressedOK
+              ? SubnetsListView(ip: ipAddress, subnetMask: subnetMask)
+              : Container(height: 10, width: 10),
         ],
       ),
     );

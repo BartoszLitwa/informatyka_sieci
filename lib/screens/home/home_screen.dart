@@ -13,7 +13,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: Center(
+            child: Text(
+          'App by Bartosz Litwa',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        )),
+      ),
       appBar: AppBar(
         title: Text("Informatyka"),
       ),
