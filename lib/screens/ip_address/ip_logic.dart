@@ -1,8 +1,11 @@
 import 'dart:math' as math;
 
 class IPLogic {
+  static const int _octets = 4, _bits = 8;
+  static List<String> _toListFromAddress(String val) => val.split('.');
+
   static String isMaskCorrect(String val) {
-    final list = val.toString().split('.');
+    final list = _toListFromAddress(val);
     if (list.length == 1) {
       int a = int.tryParse(list.first);
       if (a == null) a = 0;
@@ -15,11 +18,11 @@ class IPLogic {
       final int a = int.tryParse(e);
       if (correct) correct = (a >= 0 && a <= 255);
     });
-    return (list.length == 4 && correct) ? null : 'Maska nie poprawna';
+    return (list.length == _octets && correct) ? null : 'Maska nie poprawna';
   }
 
   static String isIPCorrect(String val) {
-    final list = val.toString().split('.');
+    final list = _toListFromAddress(val);
 
     bool correct = true;
     list.forEach((String e) {
@@ -27,11 +30,11 @@ class IPLogic {
       final int a = int.tryParse(e);
       if (correct) correct = (a >= 0 && a <= 255);
     });
-    return (list.length == 4 && correct) ? null : 'IP nie jest poprawne';
+    return (list.length == _octets && correct) ? null : 'IP nie jest poprawne';
   }
 
   static int subnetMaskToInt(String val) {
-    final list = val.toString().split('.');
+    final list = _toListFromAddress(val);
     if (list.length == 1) {
       return int.tryParse(list.first);
     }
@@ -52,11 +55,11 @@ class IPLogic {
   static String subnetMaskFromInt(String val) {
     String result = '';
     int mask = int.tryParse(val);
-    for (var i = 0; i < 4; i++) {
-      if (mask - 8 >= 0) {
+    for (var i = 0; i < _octets; i++) {
+      if (mask - _bits >= 0) {
         result += '255';
-        mask -= 8;
-      } else if (mask < 8) {
+        mask -= _bits;
+      } else if (mask < _bits) {
         final ones = fromOnesToBinary(mask.toString());
         result += fromBinaryToDecimal(ones);
         mask = 0;
@@ -92,7 +95,7 @@ class IPLogic {
   static String fromOnesToBinary(String val) {
     int ones = int.tryParse(val);
     String result = '';
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < _bits; i++) {
       if (ones-- > 0)
         result += '1';
       else
@@ -104,7 +107,7 @@ class IPLogic {
 
   static String reverseBinary(String val) {
     String res = '';
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < _bits; i++) {
       if (val.length - 1 >= i && val[i] == '1') {
         res += '0';
       } else {
@@ -118,18 +121,19 @@ class IPLogic {
       {int subnet = 0}) {
     final List<String> subMask =
         (mask.length <= 2 ? subnetMaskFromInt(mask) : mask).split('.');
-    final List<String> subNet = subnetAddress.split('.');
+    final List<String> subNet = _toListFromAddress(subnetAddress);
     final decimalMask =
         mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
     final int octet = (decimalMask / 8).floor();
     final hosts = numberOfHosts(decimalMask);
 
     String res = '';
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < _octets; i++) {
       // Binary AND &
       int val = int.tryParse(subNet[i]) & int.tryParse(subMask[i]);
 
-      if (i == octet) val += (subnet * (hosts + 2));
+      if (i >= octet)
+        val += ((subnet * (hosts + 2)) / (255 ^ (_octets - i))).floor();
 
       res += val.toString();
 
@@ -142,16 +146,10 @@ class IPLogic {
       {int subnet = 0}) {
     final List<String> subMask =
         (mask.length <= 2 ? subnetMaskFromInt(mask) : mask).split('.');
-    final List<String> subNet = subnetAddress.split('.');
-    final decimalMask =
-        mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
-    final int octet = (decimalMask / 8).floor();
-    final hosts = numberOfHosts(decimalMask);
-
-    
+    final List<String> subNet = _toListFromAddress(subnetAddress);
 
     String res = '';
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < _octets; i++) {
       final reversedMask =
           fromBinaryToDecimal(reverseBinary(toBinaryS(subMask[i])));
       // Binary OR |
@@ -163,14 +161,11 @@ class IPLogic {
   }
 
   static String firstHostAddress(String subnetAddress, String mask) {
-    final List<String> addresses = subnetAddress.split('.');
-    final int octet =
-        ((mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask)) / 8)
-            .floor();
+    final List<String> addresses = _toListFromAddress(subnetAddress);
 
     String res = '';
-    for (var i = 0; i < 4; i++) {
-      if (i == octet) {
+    for (var i = 0; i < _octets; i++) {
+      if (i == 3) {
         res += (int.tryParse(addresses[i]) + 1).toString();
       } else {
         res += addresses[i];
@@ -182,14 +177,11 @@ class IPLogic {
   }
 
   static String lastHostAddress(String subnetAddress, String mask) {
-    final List<String> addresses = subnetAddress.split('.');
-    final int octet =
-        ((mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask)) / 8)
-            .floor();
+    final List<String> addresses = _toListFromAddress(subnetAddress);
 
     String res = '';
-    for (var i = 0; i < 4; i++) {
-      if (i == octet) {
+    for (var i = 0; i < _octets; i++) {
+      if (i == 3) {
         res += (int.tryParse(addresses[i]) - 1).toString();
       } else {
         res += addresses[i];
@@ -198,5 +190,46 @@ class IPLogic {
       if (i != 3) res += '.';
     }
     return res;
+  }
+
+  static String firstSubnetAddress(String subnetAddress, String mask) {
+    final List<String> subNet = _toListFromAddress(subnetAddress);
+    final decimalMask =
+        mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
+    final int octet = (decimalMask / _bits).floor();
+
+    String res = '';
+    for (var i = 0; i < 4; i++) {
+      if (i >= octet)
+        res += '0';
+      else
+        res += subNet[i];
+
+      if (i != 3) res += '.';
+    }
+    return res;
+  }
+
+  static bool isIPContainedIn(String ipAddress, String subnetAddress,
+      String broadcastAddress, String mask) {
+    final List<String> ip = _toListFromAddress(ipAddress);
+    final List<String> subnet = _toListFromAddress(subnetAddress);
+    final List<String> broadcast = _toListFromAddress(broadcastAddress);
+    final decimalMask =
+        mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
+    final int octet = (decimalMask / 8).floor();
+
+    bool inSubnet = true, inBroadcast = true;
+    for (var i = 0; i < _octets; i++) {
+      if (i >= octet) {
+        inSubnet = (int.tryParse(ip[i]) >= int.tryParse(subnet[i]));
+        inBroadcast = (int.tryParse(ip[i]) <= int.tryParse(broadcast[i]));
+
+        if (inSubnet == false || inBroadcast == false) return false;
+      } else {
+        if (ip[i] != subnet[i] || ip[i] != broadcast[i]) return false;
+      }
+    }
+    return (inSubnet && inBroadcast);
   }
 }

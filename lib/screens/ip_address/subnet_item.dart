@@ -4,6 +4,7 @@ import 'package:sieci/constants.dart';
 class SubnetItem extends StatelessWidget {
   final String subnetAddress, broadcastAddress, firstHost, lastHost;
   final int numberOfHosts, subnet;
+  final bool ipisContained;
 
   const SubnetItem(
       {Key key,
@@ -12,14 +13,17 @@ class SubnetItem extends StatelessWidget {
       this.broadcastAddress,
       this.firstHost,
       this.lastHost,
-      this.numberOfHosts})
+      this.numberOfHosts,
+      this.ipisContained})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(15), color: white),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: ipisContained ? green : white,
+      ),
       child: Column(
         children: [
           const SizedBox(height: 5),
