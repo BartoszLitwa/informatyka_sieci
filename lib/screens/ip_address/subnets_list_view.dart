@@ -4,8 +4,11 @@ import 'package:sieci/screens/ip_address/subnet_item.dart';
 
 class SubnetsListView extends StatelessWidget {
   final String ip, subnetMask;
+  final bool onlyConatainedInIP;
 
-  const SubnetsListView({Key key, this.ip, this.subnetMask}) : super(key: key);
+  const SubnetsListView(
+      {Key key, this.ip, this.subnetMask, this.onlyConatainedInIP})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,20 +32,24 @@ class SubnetsListView extends StatelessWidget {
           final hosts = IPLogic.numberOfHosts(subnetMaskOnes);
           final isIPContained =
               IPLogic.isIPContainedIn(ip, subNet, broadcast, mask);
-          return Column(
-            children: [
-              SubnetItem(
-                subnet: val,
-                subnetAddress: subNet,
-                broadcastAddress: broadcast,
-                firstHost: firstHost,
-                lastHost: lastHost,
-                numberOfHosts: hosts,
-                ipisContained: isIPContained,
-              ),
-              const SizedBox(height: 15)
-            ],
-          );
+          return (!onlyConatainedInIP || (onlyConatainedInIP && isIPContained))
+              ? Column(
+                  children: [
+                    SubnetItem(
+                      subnet: val,
+                      subnetAddress: subNet,
+                      broadcastAddress: broadcast,
+                      firstHost: firstHost,
+                      lastHost: lastHost,
+                      numberOfHosts: hosts,
+                      ipisContained: isIPContained,
+                    ),
+                    const SizedBox(height: 15)
+                  ],
+                )
+              : Container(
+                  height: 0,
+                );
         },
       ),
     );

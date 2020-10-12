@@ -125,15 +125,18 @@ class IPLogic {
     final decimalMask =
         mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
     final int octet = (decimalMask / 8).floor();
-    final hosts = numberOfHosts(decimalMask);
+    final subnets = numberOfSubnets(decimalMask);
 
     String res = '';
     for (var i = 0; i < _octets; i++) {
       // Binary AND &
       int val = int.tryParse(subNet[i]) & int.tryParse(subMask[i]);
 
-      if (i >= octet)
-        val += ((subnet * (hosts + 2)) / (255 ^ (_octets - i))).floor();
+      if (i > octet) {
+        val += 0;
+      } else if (i == octet) {
+        val += math.min(255, 256 / subnets).floor() * subnet;
+      }
 
       res += val.toString();
 
