@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sieci/constants.dart';
 import 'package:sieci/screens/home/home_screen.dart';
+import 'package:sieci/screens/ip_address/bottomSheet_additional_settings.dart';
 import 'package:sieci/screens/ip_address/ip_logic.dart';
 import 'package:sieci/screens/ip_address/subnets_list_view.dart';
 
@@ -29,32 +30,33 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
     _focusNodeIP.addListener(() {
       _isTextIPFocused = !_isTextIPFocused;
       if (_isTextIPFocused) _isTextFieldsFocused = true;
+      print('node');
     });
 
     _focusNodeMask.addListener(() {
       _isTextMaskFocused = !_isTextMaskFocused;
       if (_isTextMaskFocused) _isTextFieldsFocused = true;
+      print('node');
     });
 
     setState(() {
       _isTextFieldsFocused = true;
     });
-    print(_isTextFieldsFocused);
-    print(_isTextIPFocused);
-    print(_isTextMaskFocused);
-    print('\n\n');
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final List<String> _customNumberOfHosts =
+        ModalRoute.of(context).settings.arguments;
 
     return HomePage(
       child: Column(
         children: [
           SizedBox(
-            height:
-                _isTextFieldsFocused ? size.height / 3.27 : size.height / 3.85,
+            height: (!_isTextFieldsFocused)
+                ? size.height / 3.85
+                : size.height / 3.27,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               alignment: Alignment.centerLeft,
@@ -85,25 +87,15 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                             ),
                             keyboardType: TextInputType.number,
                             style: const TextStyle(color: black),
-                            onChanged: (value) => setState(() {
-                              ipAddress = value;
+                            focusNode: _focusNodeIP,
+                            onChanged: (value) {
+                              if (value != null) ipAddress = value;
                               _isTextFieldsFocused =
                                   !_formKey.currentState.validate() ||
                                       _isTextIPFocused ||
                                       _isTextMaskFocused;
-                              print(_isTextFieldsFocused);
-                              print(_isTextIPFocused);
-                              print(_isTextMaskFocused);
-                              print('\n\n');
-                            }),
-                            onFieldSubmitted: (value) => setState(() {
-                              if (value != null) ipAddress = value;
-                              _isTextFieldsFocused =
-                                  !_formKey.currentState.validate();
-                              _isTextIPFocused = false;
-                            }),
+                            },
                             validator: (String val) => IPLogic.isIPCorrect(val),
-                            focusNode: _focusNodeIP,
                           ),
                         ),
                         SizedBox(
@@ -152,22 +144,16 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                             ),
                             keyboardType: TextInputType.number,
                             style: const TextStyle(color: black),
-                            onChanged: (value) => setState(() {
+                            focusNode: _focusNodeMask,
+                            onChanged: (value) {
                               if (value != null) subnetMask = value;
                               _isTextFieldsFocused =
                                   !_formKey.currentState.validate() ||
                                       _isTextIPFocused ||
                                       _isTextMaskFocused;
-                            }),
-                            onFieldSubmitted: (value) => setState(() {
-                              subnetMask = value;
-                              _isTextFieldsFocused =
-                                  !_formKey.currentState.validate();
-                              _isTextMaskFocused = false;
-                            }),
+                            },
                             validator: (String val) =>
                                 IPLogic.isMaskCorrect(val),
-                            focusNode: _focusNodeMask,
                           ),
                         ),
                         SizedBox(
@@ -176,22 +162,23 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                         Container(
                           padding: EdgeInsets.only(top: 15),
                           child: Builder(
-                            builder: (context) => RaisedButton(
+                            builder: (context) => ElevatedButton(
                               onPressed: () {
+                                print(_pressedOK);
                                 if (_formKey.currentState.validate()) {
                                   FocusScope.of(context).unfocus();
+
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: const Text(
+                                    'Przetwarzanie danych!',
+                                    style: const TextStyle(color: green),
+                                  )));
                                   setState(() {
                                     _pressedOK = true;
                                     _isTextFieldsFocused = false;
                                     _isTextIPFocused = false;
                                     _isTextMaskFocused = false;
                                   });
-                                  setState(() {});
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: const Text(
-                                    'Przetwarzanie danych!',
-                                    style: const TextStyle(color: green),
-                                  )));
                                 } else {
                                   setState(() {
                                     _pressedOK = false;
@@ -203,25 +190,31 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                   )));
                                 }
                               },
-                              color: blue,
                               child: Text('OK'),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    FlatButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          _settingsOpened = !_settingsOpened;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.settings,
-                        color: black,
+                    Builder(
+                      builder: (context) => ElevatedButton.icon(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) =>
+                                  AdditionalSettingsBottomSheet());
+                          setState(() {
+                            _settingsOpened = !_settingsOpened;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.settings,
+                          color: black,
+                        ),
+                        label: Text('Dodatkowe ustawienia',
+                            style: TextStyle(color: black)),
                       ),
-                      label: Text('Dodatkowe ustawienia',
-                          style: TextStyle(color: black)),
                     ),
                   ],
                 ),
@@ -232,8 +225,9 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
             height: 0,
           ),
           SizedBox(
-            height:
-                _isTextFieldsFocused ? size.height / 2.815 : size.height / 1.57,
+            height: (!_isTextFieldsFocused)
+                ? size.height / 1.57
+                : size.height / 2.815,
             child: _pressedOK
                 ? SubnetsListView(
                     ip: ipAddress,
