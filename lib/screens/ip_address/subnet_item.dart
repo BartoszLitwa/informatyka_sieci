@@ -3,7 +3,7 @@ import 'package:sieci/constants.dart';
 
 class SubnetItem extends StatelessWidget {
   final String subnetAddress, broadcastAddress, firstHost, lastHost;
-  final int numberOfHosts, subnet;
+  final int numberOfHosts, subnet, mask;
   final bool ipisContained;
 
   const SubnetItem(
@@ -14,7 +14,8 @@ class SubnetItem extends StatelessWidget {
       this.firstHost,
       this.lastHost,
       this.numberOfHosts,
-      this.ipisContained})
+      this.ipisContained,
+      this.mask})
       : super(key: key);
 
   @override
@@ -28,11 +29,9 @@ class SubnetItem extends StatelessWidget {
         children: [
           const SizedBox(height: 5),
           Center(
-              child: Text('Podsieć ${subnet + 1}',
-                  style: TextStyle(
-                      color: black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold))),
+              child: Text(
+                  'Podsieć ${subnet + 1}          ${mask != null ? '/$mask' : ''}',
+                  style: blackStyle.copyWith(fontSize: 18))),
           IconText(text: subnetAddress, title: 'Adres Sieci'),
           IconText(text: broadcastAddress, title: 'Adres Rozgłoszeniowy'),
           IconText(text: firstHost, title: 'Pierwszy Host'),
@@ -52,19 +51,21 @@ class IconText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 5),
-          icon != null
-              ? Icon(icon)
-              : Text('$title: ', style: TextStyle(color: black)),
-          const SizedBox(width: 5),
-          Text(text, style: TextStyle(color: black)),
-          const SizedBox(height: 5),
-        ],
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 5),
+            icon != null
+                ? Icon(icon)
+                : Center(child: Text('$title: ', style: blackStyle)),
+            const SizedBox(width: 5),
+            Center(child: Text(text, style: blackStyle)),
+            const SizedBox(height: 5),
+          ],
+        ),
       ),
     );
   }

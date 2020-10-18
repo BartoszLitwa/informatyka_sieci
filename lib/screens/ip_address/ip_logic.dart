@@ -1,96 +1,13 @@
 import 'dart:math' as math;
 
+import 'package:sieci/screens/helpers.dart';
+
 class IPLogic {
   static const int _octets = 4, _bits = 8;
-  static List<String> _toListFromAddress(String val) => val.split('.');
-
-  static String isMaskCorrect(String val) {
-    final list = _toListFromAddress(val);
-    if (list.length == 1) {
-      int a = int.tryParse(list.first);
-      if (a == null) a = 0;
-      return a > 0 && a < 32 ? null : 'Maska nie poprawna';
-    }
-
-    bool correct = true;
-    list.forEach((String e) {
-      if (e == null || e == '') e = '-1';
-      final int a = int.tryParse(e);
-      if (correct) correct = (a >= 0 && a <= 255);
-    });
-    return (list.length == _octets && correct) ? null : 'Maska nie poprawna';
-  }
-
-  static String isIPCorrect(String val) {
-    final list = _toListFromAddress(val);
-
-    bool correct = true;
-    list.forEach((String e) {
-      if (e == null || e == '') e = '-1';
-      final int a = int.tryParse(e);
-      if (correct) correct = (a >= 0 && a <= 255);
-    });
-    return (list.length == _octets && correct) ? null : 'IP nie jest poprawne';
-  }
-
-  static int subnetMaskToInt(String val) {
-    final list = _toListFromAddress(val);
-    if (list.length == 1) {
-      return int.tryParse(list.first);
-    }
-
-    bool correct = true;
-    int binaryOnes = 0;
-    list.forEach((String e) {
-      if (e == null || e == '') e = '0';
-      final int a = int.tryParse(e);
-      if (correct) {
-        correct = (a >= 0 && a <= 255);
-        if (correct) binaryOnes += toBinary(a).split('1').length - 1;
-      }
-    });
-    return binaryOnes;
-  }
-
-  static String subnetMaskFromInt(String val) {
-    String result = '';
-    int mask = int.tryParse(val);
-    for (var i = 0; i < _octets; i++) {
-      if (mask - _bits >= 0) {
-        result += '255';
-        mask -= _bits;
-      } else if (mask < _bits) {
-        final ones = fromOnesToBinary(mask.toString());
-        result += fromBinaryToDecimal(ones);
-        mask = 0;
-      }
-      if (i != 3) result += '.';
-    }
-    return result;
-  }
 
   static int numberOfHosts(int subnetMask) => math.pow(2, 32 - subnetMask) - 2;
 
   static int numberOfSubnets(int subnetMask) => math.pow(2, (subnetMask % 8));
-
-  static String toBinary(int val) => val.toRadixString(2);
-  static String toBinaryS(String val) => toBinary(int.tryParse(val));
-
-  static String toNumberSystem(int val, int system) =>
-      val.toRadixString(system);
-
-  static String toNumberSystemS(String val, int system) =>
-      toNumberSystem(int.tryParse(val), system);
-
-  static String fromBinaryToDecimal(String val) {
-    int result = 0, multiplier = 1;
-    for (var i = val.length - 1; i >= 0; i--) {
-      if (val[i] == '1') result += multiplier;
-
-      multiplier *= 2;
-    }
-    return result.toString();
-  }
 
   static String fromOnesToBinary(String val) {
     int ones = int.tryParse(val);
@@ -117,11 +34,76 @@ class IPLogic {
     return res;
   }
 
+  static String isMaskCorrect(String val) {
+    final list = Helpers.toListFromAddress(val);
+    if (list.length == 1) {
+      int a = int.tryParse(list.first);
+      if (a == null) a = 0;
+      return a > 0 && a < 32 ? null : 'Maska nie poprawna';
+    }
+
+    bool correct = true;
+    list.forEach((String e) {
+      if (e == null || e == '') e = '-1';
+      final int a = int.tryParse(e);
+      if (correct) correct = (a >= 0 && a <= 255);
+    });
+    return (list.length == _octets && correct) ? null : 'Maska nie poprawna';
+  }
+
+  static String isIPCorrect(String val) {
+    final list = Helpers.toListFromAddress(val);
+
+    bool correct = true;
+    list.forEach((String e) {
+      if (e == null || e == '') e = '-1';
+      final int a = int.tryParse(e);
+      if (correct) correct = (a >= 0 && a <= 255);
+    });
+    return (list.length == _octets && correct) ? null : 'IP nie jest poprawne';
+  }
+
+  static int subnetMaskToInt(String val) {
+    final list = Helpers.toListFromAddress(val);
+    if (list.length == 1) {
+      return int.tryParse(list.first);
+    }
+
+    bool correct = true;
+    int binaryOnes = 0;
+    list.forEach((String e) {
+      if (e == null || e == '') e = '0';
+      final int a = int.tryParse(e);
+      if (correct) {
+        correct = (a >= 0 && a <= 255);
+        if (correct) binaryOnes += Helpers.toBinary(a).split('1').length - 1;
+      }
+    });
+    return binaryOnes;
+  }
+
+  static String subnetMaskFromInt(String val) {
+    String result = '';
+    int mask = int.tryParse(val);
+    for (var i = 0; i < _octets; i++) {
+      if (mask - _bits >= 0) {
+        result += '255';
+        mask -= _bits;
+      } else if (mask < _bits) {
+        final ones = fromOnesToBinary(mask.toString());
+        result += Helpers.fromBinaryToDecimal(ones);
+        mask = 0;
+      }
+      if (i != 3) result += '.';
+    }
+    return result;
+  }
+
   static String subnetAddress(String subnetAddress, String mask,
       {int subnet = 0}) {
     final List<String> subMask =
         (mask.length <= 2 ? subnetMaskFromInt(mask) : mask).split('.');
-    final List<String> subNet = _toListFromAddress(subnetAddress);
+    final List<String> subNet = Helpers.toListFromAddress(subnetAddress);
     final decimalMask =
         mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
     final int octet = (decimalMask / 8).floor();
@@ -149,12 +131,12 @@ class IPLogic {
       {int subnet = 0}) {
     final List<String> subMask =
         (mask.length <= 2 ? subnetMaskFromInt(mask) : mask).split('.');
-    final List<String> subNet = _toListFromAddress(subnetAddress);
+    final List<String> subNet = Helpers.toListFromAddress(subnetAddress);
 
     String res = '';
     for (var i = 0; i < _octets; i++) {
-      final reversedMask =
-          fromBinaryToDecimal(reverseBinary(toBinaryS(subMask[i])));
+      final reversedMask = Helpers.fromBinaryToDecimal(
+          reverseBinary(Helpers.toBinaryS(subMask[i])));
       // Binary OR |
       res += (int.tryParse(subNet[i]) | int.tryParse(reversedMask)).toString();
 
@@ -164,7 +146,7 @@ class IPLogic {
   }
 
   static String firstHostAddress(String subnetAddress, String mask) {
-    final List<String> addresses = _toListFromAddress(subnetAddress);
+    final List<String> addresses = Helpers.toListFromAddress(subnetAddress);
 
     String res = '';
     for (var i = 0; i < _octets; i++) {
@@ -180,7 +162,7 @@ class IPLogic {
   }
 
   static String lastHostAddress(String subnetAddress, String mask) {
-    final List<String> addresses = _toListFromAddress(subnetAddress);
+    final List<String> addresses = Helpers.toListFromAddress(subnetAddress);
 
     String res = '';
     for (var i = 0; i < _octets; i++) {
@@ -196,7 +178,7 @@ class IPLogic {
   }
 
   static String firstSubnetAddress(String subnetAddress, String mask) {
-    final List<String> subNet = _toListFromAddress(subnetAddress);
+    final List<String> subNet = Helpers.toListFromAddress(subnetAddress);
     final decimalMask =
         mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
     final int octet = (decimalMask / _bits).floor();
@@ -215,9 +197,9 @@ class IPLogic {
 
   static bool isIPContainedIn(String ipAddress, String subnetAddress,
       String broadcastAddress, String mask) {
-    final List<String> ip = _toListFromAddress(ipAddress);
-    final List<String> subnet = _toListFromAddress(subnetAddress);
-    final List<String> broadcast = _toListFromAddress(broadcastAddress);
+    final List<String> ip = Helpers.toListFromAddress(ipAddress);
+    final List<String> subnet = Helpers.toListFromAddress(subnetAddress);
+    final List<String> broadcast = Helpers.toListFromAddress(broadcastAddress);
     final decimalMask =
         mask.length <= 2 ? int.tryParse(mask) : subnetMaskToInt(mask);
     final int octet = (decimalMask / 8).floor();
@@ -234,5 +216,59 @@ class IPLogic {
       }
     }
     return (inSubnet && inBroadcast);
+  }
+
+  static int maxHostsForCustomHosts(String hosts) {
+    final int customHosts = int.tryParse(hosts);
+
+    for (int i = 31; i >= 0; i--) {
+      int _hosts = numberOfHosts(i);
+      if (_hosts >= customHosts) return _hosts;
+    }
+    return -1;
+  }
+
+  static int maskForCustomHosts(String hosts) {
+    final int customHosts = int.tryParse(hosts);
+
+    for (int i = 31; i >= 0; i--) {
+      int _hosts = numberOfHosts(i);
+      if (_hosts >= customHosts) return i;
+    }
+    return -1;
+  }
+
+  static int usedHosts(List<String> list) {
+    int result = 0;
+    if (list == null || list.length <= 0) return 0;
+    list.forEach((e) {
+      result += maxHostsForCustomHosts(e) + 2;
+    });
+    return result;
+  }
+
+  static int maxUsableHosts(int basicMask) {
+    return numberOfHosts(basicMask);
+  }
+
+  static String addHostsToAddress(String address, int hosts) {
+    List<String> _address = Helpers.toListFromAddress(address);
+    List<int> _result = [0, 0, 0, 0];
+
+    for (var i = _octets - 1; i >= 0; i--) {
+      final address = int.tryParse(_address[i]);
+      int host = hosts % math.pow(255, _octets - i);
+      hosts -= host;
+      host ~/= math.pow(255, _octets - i - 1);
+
+      if (address + host > 255) {
+        _result[i] = 255 - address + host - 1;
+        if (i > 0) _result[i - 1] += hosts ~/ math.pow(255, _octets - i);
+      } else {
+        _result[i] += address + host;
+      }
+    }
+
+    return _result.join('.');
   }
 }
