@@ -6,5 +6,10 @@ const Color black = Colors.black,
     red = Colors.red,
     green = Colors.green;
 
-const TextStyle blackStyle =
-    const TextStyle(color: black, fontWeight: FontWeight.bold);
+const double smallFontSize = 12,
+    normalFontSize = 16,
+    bigFontSize = 20,
+    biggerFontSize = 24;
+
+const blackStyle = const TextStyle(color: black, fontWeight: FontWeight.bold),
+    whiteStyle = const TextStyle(color: white, fontWeight: FontWeight.bold);

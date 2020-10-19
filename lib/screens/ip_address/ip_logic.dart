@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:sieci/screens/helpers.dart';
+import 'package:sieci/screens/number_systems/number_systems_logic.dart';
 
 class IPLogic {
   static const int _octets = 4, _bits = 8;
@@ -76,7 +77,8 @@ class IPLogic {
       final int a = int.tryParse(e);
       if (correct) {
         correct = (a >= 0 && a <= 255);
-        if (correct) binaryOnes += Helpers.toBinary(a).split('1').length - 1;
+        if (correct)
+          binaryOnes += NumberSystemLogic.toBinary(a).split('1').length - 1;
       }
     });
     return binaryOnes;
@@ -91,7 +93,7 @@ class IPLogic {
         mask -= _bits;
       } else if (mask < _bits) {
         final ones = fromOnesToBinary(mask.toString());
-        result += Helpers.fromBinaryToDecimal(ones);
+        result += NumberSystemLogic.fromBinaryToDecimal(ones);
         mask = 0;
       }
       if (i != 3) result += '.';
@@ -135,8 +137,8 @@ class IPLogic {
 
     String res = '';
     for (var i = 0; i < _octets; i++) {
-      final reversedMask = Helpers.fromBinaryToDecimal(
-          reverseBinary(Helpers.toBinaryS(subMask[i])));
+      final reversedMask = NumberSystemLogic.fromBinaryToDecimal(
+          reverseBinary(NumberSystemLogic.toBinaryS(subMask[i])));
       // Binary OR |
       res += (int.tryParse(subNet[i]) | int.tryParse(reversedMask)).toString();
 
@@ -254,18 +256,19 @@ class IPLogic {
   static String addHostsToAddress(String address, int hosts) {
     List<String> _address = Helpers.toListFromAddress(address);
     List<int> _result = [0, 0, 0, 0];
+    List<int> _hostsToAdd = [0, 0, 0, 0];
 
-    for (var i = _octets - 1; i >= 0; i--) {
+    final int divideBy = hosts % 255 == 0 ? 255 : 256;
+    for (var i = 0; i < 4; i++) {
       final address = int.tryParse(_address[i]);
-      int host = hosts % math.pow(255, _octets - i);
-      hosts -= host;
-      host ~/= math.pow(255, _octets - i - 1);
+      _hostsToAdd[i] = hosts ~/ math.pow(divideBy, _octets - i - 1);
+      if (_hostsToAdd[i] != 0)
+        hosts -= _hostsToAdd[i] * math.pow(divideBy, _octets - i - 1);
 
-      if (address + host > 255) {
-        _result[i] = 255 - address + host - 1;
-        if (i > 0) _result[i - 1] += hosts ~/ math.pow(255, _octets - i);
-      } else {
-        _result[i] += address + host;
+      _result[i] = address + _hostsToAdd[i];
+      if (_result[i] >= 256) {
+        if (i > 0) _result[i - 1] += _result[i] ~/ 255;
+        _result[i] -= 256;
       }
     }
 

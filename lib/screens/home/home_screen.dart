@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sieci/screens/home/main_drawer.dart';
 
 class HomePage extends StatefulWidget {
   final Widget child;
@@ -13,13 +14,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Center(
-            child: Text(
-          'App by Bartosz Litwa',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-        )),
-      ),
+      drawer: MainDrawer(),
       appBar: AppBar(
         title: Text("Informatyka"),
       ),

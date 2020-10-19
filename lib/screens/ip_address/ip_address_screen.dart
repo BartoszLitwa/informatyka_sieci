@@ -52,7 +52,7 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: size.height / 3.27,
+            height: size.height / 3.12,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               alignment: Alignment.centerLeft,
@@ -78,7 +78,6 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                               autofocus: true,
                               decoration: InputDecoration(
                                 // border: InputBorder.none,
-                                hintText: '192.168.0.1',
                                 labelText: 'Adres IP',
                                 labelStyle: blackStyle.copyWith(fontSize: 20),
                                 hintStyle: blackStyle,
@@ -136,7 +135,6 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 // border: InputBorder.none,
-                                hintText: '24',
                                 labelText: 'Maska',
                                 labelStyle: blackStyle.copyWith(fontSize: 20),
                                 hintStyle: blackStyle,
@@ -262,8 +260,8 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
           ),
           SizedBox(
             height: (!_isTextFieldsFocused)
-                ? size.height / 1.68
-                : size.height / 2.815,
+                ? size.height / 1.745
+                : size.height / 3.29,
             child: _pressedOK
                 ? (_variableMaskChecked
                     ? CustomSubnetsListView(

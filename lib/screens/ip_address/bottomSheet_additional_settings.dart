@@ -17,40 +17,42 @@ class AdditionalSettingsBottomSheet extends StatelessWidget {
     // final size = MediaQuery.of(context).size;
     // final CustomHosts hosts = context.watch<CustomHosts>();
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-      color: white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                'Dodatkowe ustawienia',
-                style: TextStyle(
-                  color: black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+        color: white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  'Dodatkowe ustawienia',
+                  style: TextStyle(
+                    color: black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  Navigator.popAndPushNamed(context, '/ipAddressScreen');
-                },
-                child: Icon(Icons.exit_to_app),
-              )
-            ],
-          ),
-          AddHostsButton(),
-          DataTableCustomHosts(),
-          SizedBox(
-            height: 15,
-          ),
-          UsageOfHosts(basicMask: int.tryParse(basicMask)),
-        ],
+                ElevatedButton(
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.exit_to_app),
+                )
+              ],
+            ),
+            AddHostsButton(),
+            DataTableCustomHosts(),
+            SizedBox(
+              height: 15,
+            ),
+            UsageOfHosts(basicMask: int.tryParse(basicMask)),
+          ],
+        ),
       ),
     );
   }
@@ -118,48 +120,51 @@ class AddHostsButton extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final CustomHosts hosts = context.watch<CustomHosts>();
 
-    return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: size.width / 2,
-            child: TextFormField(
-              decoration: InputDecoration(
-                // border: InputBorder.none,
-                hintText: '120',
-                labelText: 'Liczba Hostów',
-                labelStyle: blackStyle.copyWith(fontSize: 20),
-                hintStyle: blackStyle,
-              ),
-              keyboardType: TextInputType.number,
-              style: const TextStyle(color: black),
-              onChanged: (value) => customHost = value,
-              validator: (String val) =>
-                  NumberSystemLogic.isCustomHostsCorrect(val),
-            ),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {
-              if (NumberSystemLogic.isCustomHostsCorrect(customHost) == null) {
-                hosts.add(customHost);
-                customHost = '';
-              } else {}
-            },
-            child: Row(
-              children: [
-                Icon(Icons.add),
-                SizedBox(width: 10),
-                Text(
-                  'Dodaj',
-                  style: blackStyle.copyWith(color: white, fontSize: 18),
+    return SizedBox(
+      height: size.height / 18,
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: size.width / 2,
+              child: TextFormField(
+                decoration: InputDecoration(
+                  // border: InputBorder.none,
+                  labelText: customHost.isEmpty ? 'Liczba Hostów' : '',
+                  labelStyle: blackStyle.copyWith(fontSize: 20),
+                  hintStyle: blackStyle,
                 ),
-              ],
+                keyboardType: TextInputType.number,
+                style: const TextStyle(color: black),
+                onChanged: (value) => customHost = value,
+                validator: (String val) =>
+                    NumberSystemLogic.isCustomHostsCorrect(val),
+              ),
             ),
-          )
-        ],
+            const SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: () {
+                if (NumberSystemLogic.isCustomHostsCorrect(customHost) ==
+                    null) {
+                  hosts.add(customHost);
+                  customHost = '';
+                } else {}
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.add),
+                  SizedBox(width: 10),
+                  Text(
+                    'Dodaj',
+                    style: blackStyle.copyWith(color: white, fontSize: 18),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
