@@ -65,6 +65,9 @@ class UsageOfHosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CustomHosts hosts = context.watch<CustomHosts>();
+    final _darkTheme = context.watch<AppTheme>();
+    final _style = _darkTheme.getStyle();
+
     final String freeHosts = basicMask == null
         ? 'Nie podano Maski'
         : IPLogic.maxUsableHosts(basicMask).toString();
@@ -79,32 +82,32 @@ class UsageOfHosts extends StatelessWidget {
       children: [
         Text(
           'Użyte: ${usedHosts.toString()}',
-          style: blackStyle.copyWith(fontSize: 15),
+          style: _style.copyWith(fontSize: 15),
         ),
         Text(
           '  |  ',
-          style: blackStyle.copyWith(fontSize: 20),
+          style: _style.copyWith(fontSize: 20),
         ),
         Text(
           'Wszytskie: $freeHosts',
-          style: blackStyle.copyWith(fontSize: 15, color: color),
+          style: _style.copyWith(fontSize: 15, color: color),
         ),
         basicMask != null
             ? Text(
                 '  |  ',
-                style: blackStyle.copyWith(fontSize: 20),
+                style: _style.copyWith(fontSize: 20),
               )
             : Container(),
         basicMask != null && leftFreeHosts >= 0
             ? Text(
                 'Pozostałe: ${leftFreeHosts.toString()}',
-                style: blackStyle.copyWith(fontSize: 15, color: color),
+                style: _style.copyWith(fontSize: 15, color: color),
               )
             : Container(),
         basicMask != null && leftFreeHosts < 0
             ? Text(
                 'Za dużo Hostów!',
-                style: blackStyle.copyWith(fontSize: 15, color: red),
+                style: _style.copyWith(fontSize: 15, color: red),
               )
             : Container(),
       ],

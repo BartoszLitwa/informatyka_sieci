@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sieci/constants.dart';
 import 'package:sieci/screens/calulator/calculator_screen.dart';
 import 'package:sieci/screens/ip_address/ip_address_screen.dart';
 import 'package:sieci/screens/number_systems/number_systems_screen.dart';
@@ -12,6 +13,12 @@ void main() {
     providers: [
       ChangeNotifierProvider(
         create: (_) => CustomHosts(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AppTheme(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => CurrentNumberSystem(),
       )
     ],
     child: MyApp(),
@@ -24,8 +31,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Informatyka",
-      theme: ThemeData.dark(),
-      initialRoute: '/ipAddressScreen',
+      theme: context.watch<AppTheme>().darkTheme
+          ? ThemeData.dark()
+          : ThemeData.light(),
+      themeMode: ThemeMode.system,
+      initialRoute: '/numberSystemScreen',
       routes: {
         '/ipAddressScreen': (_) => IpAddressScreen(),
         '/numberSystemScreen': (_) => NumberSystemsScreen(),
@@ -55,5 +65,52 @@ class CustomHosts with ChangeNotifier, DiagnosticableTreeMixin {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty('hosts', hosts));
+  }
+}
+
+/// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
+class AppTheme with ChangeNotifier, DiagnosticableTreeMixin {
+  bool _darkTheme = true;
+  bool get darkTheme => _darkTheme;
+
+  void changeTheme() {
+    _darkTheme = !_darkTheme;
+    notifyListeners();
+  }
+
+  Color getColorText() {
+    return _darkTheme ? white : black;
+  }
+
+  Color getColorBg() {
+    return _darkTheme ? Colors.black54 : Colors.white70;
+  }
+
+  TextStyle getStyle() {
+    return _darkTheme ? whiteStyle : blackStyle;
+  }
+
+  /// Makes `CustomHosts` readable inside the devtools by listing all of its properties
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    //properties.add(FlagProperty('hosts', _darkTheme));
+  }
+}
+
+class CurrentNumberSystem with ChangeNotifier, DiagnosticableTreeMixin {
+  String _current = '';
+  String get current => _current;
+
+  void set(String sys) {
+    _current = sys ?? '';
+    notifyListeners();
+  }
+
+  /// Makes `CustomHosts` readable inside the devtools by listing all of its properties
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('currentNumberSystem', _current));
   }
 }

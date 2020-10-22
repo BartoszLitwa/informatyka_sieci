@@ -4,7 +4,10 @@ const Color black = Colors.black,
     white = Colors.white,
     blue = Colors.blue,
     red = Colors.red,
-    green = Colors.green;
+    green = Colors.green,
+    grey = Colors.grey;
+
+MaterialColor disabledButton = Colors.grey[850];
 
 const double smallFontSize = 12,
     normalFontSize = 16,

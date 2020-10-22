@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sieci/constants.dart';
+import 'package:sieci/main.dart';
 import 'package:sieci/screens/home/main_drawer.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final Widget child;
@@ -13,10 +16,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final _darkTheme = context.watch<AppTheme>();
+    final _style = _darkTheme.getStyle();
+
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(
-        title: Text("Informatyka"),
+        backgroundColor: _darkTheme.getColorBg(),
+        title: Text(
+          "Informatyka",
+          style: _style,
+        ),
+        actions: [
+          ChangeAppThemeButton(),
+        ],
       ),
       body: Center(
         child: Container(
@@ -39,6 +52,24 @@ class _HomePageState extends State<HomePage> {
           child: widget.child,
         ),
       ),
+    );
+  }
+}
+
+class ChangeAppThemeButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _darkTheme = context.watch<AppTheme>().darkTheme;
+    return FlatButton.icon(
+      icon: Icon(
+        Icons.color_lens,
+        color: _darkTheme ? white : black,
+      ),
+      label: Text(
+        'Motyw',
+        style: _darkTheme ? whiteStyle : blackStyle,
+      ),
+      onPressed: () => context.read<AppTheme>().changeTheme(),
     );
   }
 }

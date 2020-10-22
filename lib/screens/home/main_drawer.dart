@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:sieci/constants.dart';
+import 'package:provider/provider.dart';
+import 'package:sieci/main.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final _darkTheme = context.watch<AppTheme>().darkTheme;
+    final _style = _darkTheme ? whiteStyle : blackStyle;
 
     return Drawer(
       child: ListView(
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(color: blue
-                //border: Border(bottom: BorderSide.merge(a, b))
-                ),
+            decoration: BoxDecoration(color: _darkTheme ? black : Colors.grey),
             child: Column(
               children: [
                 Text(
                   'Informatyka',
-                  style: whiteStyle.copyWith(fontSize: biggerFontSize * 2),
+                  style: _style.copyWith(fontSize: biggerFontSize * 2),
                 ),
                 Divider(
                   color: white,
@@ -26,7 +28,7 @@ class MainDrawer extends StatelessWidget {
                 ),
                 Text(
                   'Stworzona przez Bartosz Litwa',
-                  style: whiteStyle.copyWith(fontSize: normalFontSize),
+                  style: _style.copyWith(fontSize: normalFontSize),
                 )
               ],
             ),
@@ -37,6 +39,7 @@ class MainDrawer extends StatelessWidget {
             },
             icon: Icons.network_cell,
             text: 'Sieci',
+            darkTheme: _darkTheme,
           ),
           ListTileButton(
             func: () {
@@ -44,6 +47,7 @@ class MainDrawer extends StatelessWidget {
             },
             icon: Icons.two_k,
             text: 'Systemy Liczbowe',
+            darkTheme: _darkTheme,
           ),
           ListTileButton(
             func: () {
@@ -51,6 +55,7 @@ class MainDrawer extends StatelessWidget {
             },
             icon: Icons.calculate,
             text: 'Kalkulator',
+            darkTheme: _darkTheme,
           ),
         ],
       ),
@@ -62,25 +67,34 @@ class ListTileButton extends StatelessWidget {
   final Function func;
   final IconData icon;
   final String text;
+  final bool darkTheme;
 
-  const ListTileButton({Key key, this.func, this.icon, this.text})
+  const ListTileButton(
+      {Key key, this.func, this.icon, this.text, this.darkTheme})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _style = darkTheme ? whiteStyle : blackStyle;
+    final _color = darkTheme ? white : black;
+
     return FlatButton(
       onPressed: func,
       child: Column(
         children: [
           ListTile(
-            leading: Icon(icon),
+            leading: Icon(
+              icon,
+              color: _color,
+            ),
             title: Text(
               text,
-              style: whiteStyle.copyWith(fontSize: bigFontSize),
+              style: _style.copyWith(fontSize: bigFontSize),
             ),
           ),
           Divider(
             thickness: 2,
+            color: _color,
           ),
         ],
       ),

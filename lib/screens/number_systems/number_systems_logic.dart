@@ -25,11 +25,15 @@ class NumberSystemLogic {
     return exp.hasMatch(val);
   }
 
-  static String toBinary(int val) => val.toRadixString(2);
+  static String toBinary(int val) {
+    return val == null || val.isNaN ? '' : val.toRadixString(2);
+  }
+
   static String toBinaryS(String val) => toBinary(int.tryParse(val));
 
-  static String toNumberSystem(int val, int system) =>
-      val.toRadixString(system);
+  static String toNumberSystem(int val, int system) {
+    return val == null || val.isNaN ? '' : val.toRadixString(system);
+  }
 
   static String toNumberSystemS(String val, int system) =>
       toNumberSystem(int.tryParse(val), system);
@@ -84,5 +88,31 @@ class NumberSystemLogic {
     }
 
     return result.toString();
+  }
+
+  static String manageCalculatorSymbols(String text, String input) {
+    switch (input) {
+      case '-':
+        return text.substring(0, text.length - 1);
+      case 'CE':
+        return '';
+      default:
+        return text + input;
+    }
+  }
+
+  static int numberSystemToInt(String system) {
+    switch (system) {
+      case 'BIN':
+        return 1;
+      case 'OCT':
+        return 2;
+      case 'DEC':
+        return 3;
+      case 'HEX':
+        return 4;
+      default:
+        return 0;
+    }
   }
 }
