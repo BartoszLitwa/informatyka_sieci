@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sieci/constants.dart';
+import 'package:sieci/main.dart';
 import 'package:sieci/screens/home/home_screen.dart';
 import 'package:sieci/screens/ip_address/bottomSheet_additional_settings.dart';
 import 'package:sieci/screens/ip_address/custom_subnets_list_view.dart';
 import 'package:sieci/screens/ip_address/ip_logic.dart';
 import 'package:sieci/screens/ip_address/subnets_list_view.dart';
+import 'package:provider/provider.dart';
 
 class IpAddressScreen extends StatefulWidget {
   @override
@@ -47,6 +49,10 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
+    final _colorBg = _appTheme.getColorBg();
+    final _color = _appTheme.getColorText();
 
     return HomePage(
       child: Column(
@@ -58,9 +64,8 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: _colorBg,
                 borderRadius: BorderRadius.circular(10),
-                border: Border(),
               ),
               child: Form(
                 key: _formKey,
@@ -79,11 +84,12 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                               decoration: InputDecoration(
                                 // border: InputBorder.none,
                                 labelText: 'Adres IP',
-                                labelStyle: blackStyle.copyWith(fontSize: 20),
-                                hintStyle: blackStyle,
+                                labelStyle:
+                                    _style.copyWith(fontSize: bigFontSize),
+                                hintStyle: _style,
                               ),
                               keyboardType: TextInputType.number,
-                              style: const TextStyle(color: black),
+                              style: _style,
                               focusNode: _focusNodeIP,
                               onChanged: (value) {
                                 if (value != null) ipAddress = value;
@@ -113,9 +119,7 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                 Text(
                                   ' Tylko  \npodsieć   \n  z IP',
                                   softWrap: true,
-                                  style: TextStyle(
-                                      color: black,
-                                      fontWeight: FontWeight.bold),
+                                  style: _style,
                                 )
                               ],
                             ),
@@ -136,11 +140,12 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                               decoration: InputDecoration(
                                 // border: InputBorder.none,
                                 labelText: 'Maska',
-                                labelStyle: blackStyle.copyWith(fontSize: 20),
-                                hintStyle: blackStyle,
+                                labelStyle:
+                                    _style.copyWith(fontSize: bigFontSize),
+                                hintStyle: _style,
                               ),
                               keyboardType: TextInputType.number,
-                              style: const TextStyle(color: black),
+                              style: _style,
                               focusNode: _focusNodeMask,
                               onChanged: (value) {
                                 if (value != null) subnetMask = value;
@@ -174,9 +179,7 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                 Text(
                                   'Zmienna \nMaska',
                                   softWrap: true,
-                                  style: TextStyle(
-                                      color: black,
-                                      fontWeight: FontWeight.bold),
+                                  style: _style,
                                 )
                               ],
                             ),
@@ -202,10 +205,9 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                             },
                             icon: Icon(
                               Icons.settings,
-                              color: white,
+                              color: _color,
                             ),
-                            label: Text('Dodatkowe ustawienia',
-                                style: TextStyle(color: white)),
+                            label: Text('Dodatkowe ustawienia', style: _style),
                           ),
                         ),
                         Container(
@@ -217,9 +219,9 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                   FocusScope.of(context).unfocus();
 
                                   Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: const Text(
+                                      content: Text(
                                     'Przetwarzanie danych!',
-                                    style: const TextStyle(color: green),
+                                    style: _style.copyWith(color: green),
                                   )));
                                   setState(() {
                                     _pressedOK = true;
@@ -232,19 +234,22 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                     _pressedOK = false;
                                   });
                                   Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: const Text(
+                                      content: Text(
                                     'Maska lub IP są nie poprawne!',
-                                    style: const TextStyle(color: red),
+                                    style: _style.copyWith(color: red),
                                   )));
                                 }
                               },
                               child: Row(
                                 children: [
-                                  Icon(Icons.check),
+                                  Icon(
+                                    Icons.check,
+                                    color: _color,
+                                  ),
                                   Text(
                                     'OK',
-                                    style: blackStyle.copyWith(
-                                        fontSize: 20, color: white),
+                                    style:
+                                        _style.copyWith(fontSize: bigFontSize),
                                   ),
                                 ],
                               ),

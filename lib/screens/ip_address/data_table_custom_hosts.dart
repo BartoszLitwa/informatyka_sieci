@@ -11,8 +11,10 @@ class DataTableCustomHosts extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final CustomHosts hosts = context.watch<CustomHosts>();
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
 
-    final listOfRows = _dataToRows(hosts);
+    final listOfRows = _dataToRows(hosts, _style);
     final double fontSize =
         listOfRows.length > 9 ? (16.0 - (listOfRows.length - 9.0)) : 16.0;
     return SizedBox(
@@ -23,18 +25,18 @@ class DataTableCustomHosts extends StatelessWidget {
         columnSpacing: 40,
         dataRowHeight: fontSize * 1.5,
         sortAscending: true,
-        columns: const <DataColumn>[
-          DataColumn(label: const Text('Hostów', style: blackStyle)),
-          DataColumn(label: const Text('Max', style: blackStyle)),
-          DataColumn(label: const Text('Maska', style: blackStyle)),
-          DataColumn(label: const Text('Usuń', style: blackStyle)),
+        columns: <DataColumn>[
+          DataColumn(label: Text('Hostów', style: _style)),
+          DataColumn(label: Text('Max', style: _style)),
+          DataColumn(label: Text('Maska', style: _style)),
+          DataColumn(label: Text('Usuń', style: _style)),
         ],
         rows: listOfRows,
       ),
     );
   }
 
-  List<DataRow> _dataToRows(CustomHosts customHosts) {
+  List<DataRow> _dataToRows(CustomHosts customHosts, TextStyle style) {
     List<DataRow> result = new List<DataRow>();
     for (var i = 0; i < customHosts.hosts.length; i++) {
       result.add(DataRow(cells: <DataCell>[
@@ -42,7 +44,7 @@ class DataTableCustomHosts extends StatelessWidget {
           Center(
             child: Text(
               customHosts.hosts[i],
-              style: blackStyle,
+              style: style,
             ),
           ),
         ),
@@ -50,7 +52,7 @@ class DataTableCustomHosts extends StatelessWidget {
           Center(
             child: Text(
               IPLogic.maxHostsForCustomHosts(customHosts.hosts[i]).toString(),
-              style: blackStyle,
+              style: style,
             ),
           ),
         ),
@@ -58,7 +60,7 @@ class DataTableCustomHosts extends StatelessWidget {
           Center(
             child: Text(
               '/${IPLogic.maskForCustomHosts(customHosts.hosts[i])}'.toString(),
-              style: blackStyle,
+              style: style,
             ),
           ),
         ),

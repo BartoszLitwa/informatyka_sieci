@@ -15,14 +15,20 @@ class CustomSubnetsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final _appTheme = context.watch<AppTheme>();
+    final _colorBg = _appTheme.getColorBg();
+
     List<String> _hosts = context.watch<CustomHosts>().hosts;
     _hosts.sort((f, s) => int.tryParse(s).compareTo(int.tryParse(f)));
 
     return SizedBox(
       height: size.height / 1.56 - 1,
       width: size.width / 1.2,
-      child: ListView(
-        children: _customSubnetItems(_hosts),
+      child: Container(
+        color: _colorBg,
+        child: ListView(
+          children: _customSubnetItems(_hosts),
+        ),
       ),
     );
   }
@@ -65,8 +71,6 @@ class CustomSubnetsListView extends StatelessWidget {
             ],
           ),
         );
-      } else {
-        _customSubnetList.add(Container());
       }
     }
     return _customSubnetList;

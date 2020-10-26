@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sieci/constants.dart';
+import 'package:sieci/main.dart';
+import 'package:provider/provider.dart';
 
 class SubnetItem extends StatelessWidget {
   final String subnetAddress, broadcastAddress, firstHost, lastHost;
@@ -20,10 +22,14 @@ class SubnetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
+    final _colorBg = _appTheme.getColorBg();
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: ipisContained ? green : white,
+        color: ipisContained ? green : _colorBg,
       ),
       child: Column(
         children: [
@@ -31,7 +37,7 @@ class SubnetItem extends StatelessWidget {
           Center(
               child: Text(
                   'Podsieć ${subnet + 1}          ${mask != null ? '/$mask' : ''}',
-                  style: blackStyle.copyWith(fontSize: 18))),
+                  style: _style.copyWith(fontSize: bigFontSize))),
           IconText(text: subnetAddress, title: 'Adres Sieci'),
           IconText(text: broadcastAddress, title: 'Adres Rozgłoszeniowy'),
           IconText(text: firstHost, title: 'Pierwszy Host'),
@@ -50,6 +56,9 @@ class IconText extends StatelessWidget {
   const IconText({Key key, this.text, this.title, this.icon}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
       child: Center(
@@ -60,9 +69,9 @@ class IconText extends StatelessWidget {
             const SizedBox(height: 5),
             icon != null
                 ? Icon(icon)
-                : Center(child: Text('$title: ', style: blackStyle)),
+                : Center(child: Text('$title: ', style: _style)),
             const SizedBox(width: 5),
-            Center(child: Text(text, style: blackStyle)),
+            Center(child: Text(text, style: _style)),
             const SizedBox(height: 5),
           ],
         ),

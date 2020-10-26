@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sieci/constants.dart';
 import 'package:sieci/main.dart';
+import 'package:sieci/screens/number_systems/number_systems_logic.dart';
 
 class CustomKeyboardNumberSystem extends StatefulWidget {
   final Function(String) func;
@@ -17,30 +18,17 @@ class CustomKeyboardNumberSystem extends StatefulWidget {
 
 class _CustomKeyboardNumberSystemState
     extends State<CustomKeyboardNumberSystem> {
-  bool isSystemOn(String button) {
-    if (button == 'CE' || button == '-') return true;
-    final val = int.tryParse(button) ?? 100;
-    switch (widget.currentSystem) {
-      case 'BIN':
-        return val <= 1;
-      case 'OCT':
-        return val <= 7;
-      case 'DEC':
-        return val <= 9;
-      case 'HEX':
-        return true;
-      default:
-        return true;
-    }
-  }
-
   Color colorOfButton(String button, Color color) {
-    return isSystemOn(button) ? color : grey;
+    return NumberSystemLogic.isSystemOn(button, widget.currentSystem)
+        ? color
+        : grey;
   }
 
   void onPressedButton(String button) {
     setState(() {
-      return isSystemOn(button) ? widget.func(button) : null;
+      return NumberSystemLogic.isSystemOn(button, widget.currentSystem)
+          ? widget.func(button)
+          : null;
     });
   }
 
@@ -57,7 +45,7 @@ class _CustomKeyboardNumberSystemState
     // 1 2 3 D
     // 0 A B C
     return SizedBox(
-      height: size.height / 2.75,
+      height: size.height / 2.55,
       child: Container(
         decoration: BoxDecoration(
           color: colorBg,
@@ -68,17 +56,23 @@ class _CustomKeyboardNumberSystemState
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                _customButton('', style, colorBg, colorText),
+                _customButton('', style, colorBg, colorText),
                 _customButton('CE', style, colorBg, colorText),
                 FlatButton(
                   onPressed: () => onPressedButton('-'),
                   color: colorBg,
                   child: RotatedBox(
                     quarterTurns: 2, // Rotate by 180 degrees
-                    child: Icon(
-                      Icons.send,
-                      color: colorText,
+                    child: SizedBox(
+                      height: 58,
+                      width: 48,
+                      child: Icon(
+                        Icons.send,
+                        size: 40,
+                        color: colorText,
+                      ),
                     ),
                   ),
                 ),

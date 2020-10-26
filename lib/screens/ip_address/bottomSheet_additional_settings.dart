@@ -16,11 +16,14 @@ class AdditionalSettingsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     // final CustomHosts hosts = context.watch<CustomHosts>();
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
+    final _colorBg = _appTheme.getColorBg();
 
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-        color: white,
+        color: _colorBg,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,11 +33,7 @@ class AdditionalSettingsBottomSheet extends StatelessWidget {
               children: [
                 Text(
                   'Dodatkowe ustawienia',
-                  style: TextStyle(
-                    color: black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                  ),
+                  style: _style.copyWith(fontSize: biggerFontSize),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -65,8 +64,8 @@ class UsageOfHosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CustomHosts hosts = context.watch<CustomHosts>();
-    final _darkTheme = context.watch<AppTheme>();
-    final _style = _darkTheme.getStyle();
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
 
     final String freeHosts = basicMask == null
         ? 'Nie podano Maski'
@@ -122,6 +121,8 @@ class AddHostsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final CustomHosts hosts = context.watch<CustomHosts>();
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
 
     return SizedBox(
       height: size.height / 18,
@@ -130,17 +131,20 @@ class AddHostsButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Liczba\nHostów',
+              style: _style,
+            ),
+            const SizedBox(width: 10),
             SizedBox(
-              width: size.width / 2,
+              width: size.width / 3,
               child: TextFormField(
                 decoration: InputDecoration(
-                  // border: InputBorder.none,
-                  labelText: customHost.isEmpty ? 'Liczba Hostów' : '',
-                  labelStyle: blackStyle.copyWith(fontSize: 20),
-                  hintStyle: blackStyle,
+                  labelStyle: _style.copyWith(fontSize: bigFontSize),
+                  hintStyle: _style,
                 ),
                 keyboardType: TextInputType.number,
-                style: const TextStyle(color: black),
+                style: _style,
                 onChanged: (value) => customHost = value,
                 validator: (String val) =>
                     NumberSystemLogic.isCustomHostsCorrect(val),
@@ -161,7 +165,7 @@ class AddHostsButton extends StatelessWidget {
                   SizedBox(width: 10),
                   Text(
                     'Dodaj',
-                    style: blackStyle.copyWith(color: white, fontSize: 18),
+                    style: whiteStyle.copyWith(fontSize: bigFontSize),
                   ),
                 ],
               ),

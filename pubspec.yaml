@@ -1,5 +1,5 @@
 name: sieci
-description: A new Flutter project.
+description: Small project for educational purposes for IT lessons.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -29,7 +29,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.8.1
+    
+flutter_icons:
+  image_path: "assets/sieci.png" 
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.

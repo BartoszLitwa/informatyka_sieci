@@ -73,10 +73,10 @@ class _NumberSystemsScreenState extends State<NumberSystemsScreen> {
         margin: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: _colorBg,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Form(
               key: _formKey,
@@ -222,8 +222,9 @@ class NumberSystemTextField extends StatelessWidget {
         ),
         SizedBox(width: 20),
         SizedBox(
-          width: size.width / 1.8,
+          width: size.width / 1.6,
           child: TextFormField(
+            maxLines: 2,
             controller: textController,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(

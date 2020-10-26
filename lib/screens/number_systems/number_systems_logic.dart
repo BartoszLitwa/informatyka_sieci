@@ -93,10 +93,11 @@ class NumberSystemLogic {
   static String manageCalculatorSymbols(String text, String input) {
     switch (input) {
       case '-':
-        return text.substring(0, text.length - 1);
+        return text.length <= 1 ? '0' : text.substring(0, text.length - 1);
       case 'CE':
-        return '';
+        return '0';
       default:
+        if (text == '0') text = '';
         return text + input;
     }
   }
@@ -113,6 +114,23 @@ class NumberSystemLogic {
         return 4;
       default:
         return 0;
+    }
+  }
+
+  static bool isSystemOn(String button, String currentSystem) {
+    if (button == 'CE' || button == '-') return true;
+    final val = int.tryParse(button) ?? 100;
+    switch (currentSystem) {
+      case 'BIN':
+        return val <= 1;
+      case 'OCT':
+        return val <= 7;
+      case 'DEC':
+        return val <= 9;
+      case 'HEX':
+        return true;
+      default:
+        return true;
     }
   }
 }

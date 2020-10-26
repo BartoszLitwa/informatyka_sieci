@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           ? ThemeData.dark()
           : ThemeData.light(),
       themeMode: ThemeMode.system,
-      initialRoute: '/numberSystemScreen',
+      initialRoute: '/ipAddressScreen',
       routes: {
         '/ipAddressScreen': (_) => IpAddressScreen(),
         '/numberSystemScreen': (_) => NumberSystemsScreen(),
