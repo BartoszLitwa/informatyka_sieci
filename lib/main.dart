@@ -71,12 +71,26 @@ class CustomHosts with ChangeNotifier, DiagnosticableTreeMixin {
 /// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
 class AppTheme with ChangeNotifier, DiagnosticableTreeMixin {
   bool _darkTheme = true;
+  double _height, _width;
   bool get darkTheme => _darkTheme;
+  double get height => _height;
+  double get width => _width;
 
   void changeTheme() {
     _darkTheme = !_darkTheme;
     notifyListeners();
   }
+
+  void setupRes(Size size) {
+    _height = size.height;
+    _width = size.width;
+  }
+
+  double get space => _width / 25;
+  double get smallSpace => space * 2 / 3;
+  double get smallerSpace => space * 1 / 3;
+  double get bigSpace => space * 4 / 3;
+  double get bigerSpace => space * 2;
 
   Color getColorText() {
     return _darkTheme ? white : black;

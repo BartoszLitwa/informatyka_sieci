@@ -16,13 +16,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final _darkTheme = context.watch<AppTheme>();
-    final _style = _darkTheme.getStyle();
+    final _appTheme = context.watch<AppTheme>();
+    final _style = _appTheme.getStyle();
 
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(
-        backgroundColor: _darkTheme.getColorBg(),
+        backgroundColor: _appTheme.getColorBg(),
         title: Text(
           "Informatyka",
           style: _style,

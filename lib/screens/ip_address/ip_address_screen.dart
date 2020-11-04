@@ -48,8 +48,9 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final _appTheme = context.watch<AppTheme>();
+    _appTheme.setupRes(MediaQuery.of(context).size);
+
     final _style = _appTheme.getStyle();
     final _colorBg = _appTheme.getColorBg();
     final _color = _appTheme.getColorText();
@@ -58,14 +59,15 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: size.height / 3.12,
+            height: _appTheme.height / 3.05,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              padding: EdgeInsets.symmetric(
+                  horizontal: _appTheme.space, vertical: _appTheme.space / 3),
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.all(20),
+              margin: EdgeInsets.all(_appTheme.bigSpace),
               decoration: BoxDecoration(
                 color: _colorBg,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(_appTheme.smallSpace),
               ),
               child: Form(
                 key: _formKey,
@@ -74,11 +76,12 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: size.height / 10.5,
+                      height: _appTheme.height / 10.5,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: size.width / 1.9,
+                            width: _appTheme.width / 2,
                             child: TextFormField(
                               autofocus: true,
                               decoration: InputDecoration(
@@ -98,15 +101,14 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                   IPLogic.isIPCorrect(val),
                             ),
                           ),
-                          SizedBox(
-                            width: 0,
-                          ),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 3, vertical: 5),
+                                horizontal: _appTheme.smallerSpace,
+                                vertical: _appTheme.smallerSpace),
                             decoration: BoxDecoration(
                                 color: Colors.black12,
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius:
+                                    BorderRadius.circular(_appTheme.bigSpace)),
                             child: Row(
                               children: [
                                 Checkbox(
@@ -128,14 +130,12 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 0,
-                    ),
-                    SizedBox(
-                      height: size.height / 10.5,
+                      height: _appTheme.height / 10.5,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: size.width / 1.9,
+                            width: _appTheme.width / 2,
                             child: TextFormField(
                               decoration: InputDecoration(
                                 // border: InputBorder.none,
@@ -158,15 +158,14 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                   IPLogic.isMaskCorrect(val),
                             ),
                           ),
-                          SizedBox(
-                            width: 0,
-                          ),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 3, vertical: 5),
+                                horizontal: _appTheme.smallerSpace,
+                                vertical: _appTheme.smallerSpace),
                             decoration: BoxDecoration(
                                 color: Colors.black12,
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius:
+                                    BorderRadius.circular(_appTheme.bigSpace)),
                             child: Row(
                               children: [
                                 Checkbox(
@@ -188,6 +187,7 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                       ),
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Builder(
                           builder: (context) => ElevatedButton.icon(
@@ -211,7 +211,7 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 20),
+                          padding: EdgeInsets.only(left: _appTheme.bigSpace),
                           child: Builder(
                             builder: (context) => ElevatedButton(
                               onPressed: () {
@@ -219,10 +219,11 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                   FocusScope.of(context).unfocus();
 
                                   Scaffold.of(context).showSnackBar(SnackBar(
+                                      backgroundColor: _colorBg,
                                       content: Text(
-                                    'Przetwarzanie danych!',
-                                    style: _style.copyWith(color: green),
-                                  )));
+                                        'Przetwarzanie danych!',
+                                        style: _style.copyWith(color: green),
+                                      )));
                                   setState(() {
                                     _pressedOK = true;
                                     _isTextFieldsFocused = false;
@@ -234,10 +235,11 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                                     _pressedOK = false;
                                   });
                                   Scaffold.of(context).showSnackBar(SnackBar(
+                                      backgroundColor: _colorBg,
                                       content: Text(
-                                    'Maska lub IP są nie poprawne!',
-                                    style: _style.copyWith(color: red),
-                                  )));
+                                        'Maska lub IP są nie poprawne!',
+                                        style: _style.copyWith(color: red),
+                                      )));
                                 }
                               },
                               child: Row(
@@ -263,10 +265,7 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
               ),
             ),
           ),
-          SizedBox(
-            height: (!_isTextFieldsFocused)
-                ? size.height / 1.745
-                : size.height / 3.29,
+          Expanded(
             child: _pressedOK
                 ? (_variableMaskChecked
                     ? CustomSubnetsListView(
@@ -279,8 +278,26 @@ class _IpAddressScreenState extends State<IpAddressScreen> {
                         subnetMask: subnetMask,
                         onlyConatainedInIP: _ipOnlyContainedChecked,
                       ))
-                : Container(height: 10, width: 10),
+                : Container(height: _appTheme.space, width: _appTheme.space),
           ),
+          // SizedBox(
+          //   height: (!_isTextFieldsFocused)
+          //       ? _appTheme.height / 1.745
+          //       : _appTheme.height / 3.29,
+          //   child: _pressedOK
+          //       ? (_variableMaskChecked
+          //           ? CustomSubnetsListView(
+          //               ip: ipAddress,
+          //               subnetMask: subnetMask,
+          //               onlyConatainedInIP: _ipOnlyContainedChecked,
+          //             )
+          //           : SubnetsListView(
+          //               ip: ipAddress,
+          //               subnetMask: subnetMask,
+          //               onlyConatainedInIP: _ipOnlyContainedChecked,
+          //             ))
+          //       : Container(height: _appTheme.space, width: _appTheme.space),
+          // ),
         ],
       ),
     );

@@ -14,8 +14,6 @@ class AdditionalSettingsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
-    // final CustomHosts hosts = context.watch<CustomHosts>();
     final _appTheme = context.watch<AppTheme>();
     final _style = _appTheme.getStyle();
     final _colorBg = _appTheme.getColorBg();
@@ -47,7 +45,7 @@ class AdditionalSettingsBottomSheet extends StatelessWidget {
             AddHostsButton(),
             DataTableCustomHosts(),
             SizedBox(
-              height: 15,
+              height: _appTheme.space,
             ),
             UsageOfHosts(basicMask: int.tryParse(basicMask)),
           ],
@@ -81,32 +79,32 @@ class UsageOfHosts extends StatelessWidget {
       children: [
         Text(
           'Użyte: ${usedHosts.toString()}',
-          style: _style.copyWith(fontSize: 15),
+          style: _style.copyWith(fontSize: normalFontSize),
         ),
         Text(
           '  |  ',
-          style: _style.copyWith(fontSize: 20),
+          style: _style.copyWith(fontSize: bigFontSize),
         ),
         Text(
           'Wszytskie: $freeHosts',
-          style: _style.copyWith(fontSize: 15, color: color),
+          style: _style.copyWith(fontSize: normalFontSize, color: color),
         ),
         basicMask != null
             ? Text(
                 '  |  ',
-                style: _style.copyWith(fontSize: 20),
+                style: _style.copyWith(fontSize: bigFontSize),
               )
             : Container(),
         basicMask != null && leftFreeHosts >= 0
             ? Text(
                 'Pozostałe: ${leftFreeHosts.toString()}',
-                style: _style.copyWith(fontSize: 15, color: color),
+                style: _style.copyWith(fontSize: normalFontSize, color: color),
               )
             : Container(),
         basicMask != null && leftFreeHosts < 0
             ? Text(
                 'Za dużo Hostów!',
-                style: _style.copyWith(fontSize: 15, color: red),
+                style: _style.copyWith(fontSize: normalFontSize, color: red),
               )
             : Container(),
       ],
@@ -123,6 +121,7 @@ class AddHostsButton extends StatelessWidget {
     final CustomHosts hosts = context.watch<CustomHosts>();
     final _appTheme = context.watch<AppTheme>();
     final _style = _appTheme.getStyle();
+    print(_appTheme.space);
 
     return SizedBox(
       height: size.height / 18,
@@ -135,9 +134,9 @@ class AddHostsButton extends StatelessWidget {
               'Liczba\nHostów',
               style: _style,
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: _appTheme.space),
             SizedBox(
-              width: size.width / 3,
+              width: _appTheme.width / 3,
               child: TextFormField(
                 decoration: InputDecoration(
                   labelStyle: _style.copyWith(fontSize: bigFontSize),
@@ -150,7 +149,7 @@ class AddHostsButton extends StatelessWidget {
                     NumberSystemLogic.isCustomHostsCorrect(val),
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: _appTheme.space),
             ElevatedButton(
               onPressed: () {
                 if (NumberSystemLogic.isCustomHostsCorrect(customHost) ==
@@ -162,7 +161,7 @@ class AddHostsButton extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(Icons.add),
-                  SizedBox(width: 10),
+                  SizedBox(width: _appTheme.space),
                   Text(
                     'Dodaj',
                     style: whiteStyle.copyWith(fontSize: bigFontSize),

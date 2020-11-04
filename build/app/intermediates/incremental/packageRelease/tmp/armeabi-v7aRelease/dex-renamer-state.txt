@@ -1,0 +1,4 @@
+#Wed Nov 04 23:28:54 CET 2020
+base.0=E\:\\Development\\Flutter\\sieci\\build\\app\\intermediates\\transforms\\r8\\release\\0\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

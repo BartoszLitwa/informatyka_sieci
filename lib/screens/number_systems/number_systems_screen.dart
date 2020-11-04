@@ -54,7 +54,6 @@ class _NumberSystemsScreenState extends State<NumberSystemsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final size = MediaQuery.of(context).size;
     final _appTheme = context.watch<AppTheme>();
     final _colorBg = _appTheme.getColorBg();
 
@@ -70,13 +69,13 @@ class _NumberSystemsScreenState extends State<NumberSystemsScreen> {
 
     return HomePage(
       child: Container(
-        margin: const EdgeInsets.all(15),
+        margin: EdgeInsets.all(_appTheme.space),
         decoration: BoxDecoration(
           color: _colorBg,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(_appTheme.smallSpace),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Form(
               key: _formKey,
@@ -208,9 +207,8 @@ class NumberSystemTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final _appTheme = context.watch<AppTheme>();
-    final _style = _appTheme.getStyle().copyWith(fontSize: 20);
+    final _style = _appTheme.getStyle().copyWith(fontSize: bigFontSize);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -220,9 +218,9 @@ class NumberSystemTextField extends StatelessWidget {
           shortSys,
           style: _style.copyWith(fontSize: biggerFontSize),
         ),
-        SizedBox(width: 20),
+        SizedBox(width: _appTheme.bigSpace),
         SizedBox(
-          width: size.width / 1.6,
+          width: _appTheme.width / 1.6,
           child: TextFormField(
             maxLines: 2,
             controller: textController,

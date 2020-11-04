@@ -94,7 +94,7 @@ class NumberSystemLogic {
     switch (input) {
       case '-':
         return text.length <= 1 ? '0' : text.substring(0, text.length - 1);
-      case 'CE':
+      case 'X':
         return '0';
       default:
         if (text == '0') text = '';
@@ -118,7 +118,7 @@ class NumberSystemLogic {
   }
 
   static bool isSystemOn(String button, String currentSystem) {
-    if (button == 'CE' || button == '-') return true;
+    if (button == 'X' || button == '-') return true;
     final val = int.tryParse(button) ?? 100;
     switch (currentSystem) {
       case 'BIN':

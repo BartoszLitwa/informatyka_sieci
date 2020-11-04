@@ -243,14 +243,12 @@ class IPLogic {
   static int usedHosts(List<String> list) {
     int result = 0;
     if (list == null || list.length <= 0) return 0;
-    list.forEach((e) {
-      result += maxHostsForCustomHosts(e) + 2;
-    });
+    list.forEach((e) => result += maxHostsForCustomHosts(e) + 2);
     return result;
   }
 
   static int maxUsableHosts(int basicMask) {
-    return numberOfHosts(basicMask);
+    return numberOfHosts(basicMask) + 2;
   }
 
   static String addHostsToAddress(String address, int hosts) {
@@ -259,7 +257,7 @@ class IPLogic {
     List<int> _hostsToAdd = [0, 0, 0, 0];
 
     final int divideBy = hosts % 255 == 0 ? 255 : 256;
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < _octets; i++) {
       final address = int.tryParse(_address[i]);
       _hostsToAdd[i] = hosts ~/ math.pow(divideBy, _octets - i - 1);
       if (_hostsToAdd[i] != 0)

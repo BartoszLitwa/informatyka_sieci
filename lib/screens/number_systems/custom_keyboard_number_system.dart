@@ -34,43 +34,41 @@ class _CustomKeyboardNumberSystemState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final appTheme = context.watch<AppTheme>();
-    final style = appTheme.getStyle().copyWith(fontSize: 50);
-    final colorBg = appTheme.getColorBg();
-    final colorText = appTheme.getColorText();
+    final _appTheme = context.watch<AppTheme>();
+    final textSize = _appTheme.width * _appTheme.width / 4000;
+    final style = _appTheme.getStyle().copyWith(fontSize: textSize);
+    final colorBg = _appTheme.getColorBg();
+    final colorText = _appTheme.getColorText();
     //    CE <
     // 7 8 9 F
     // 4 5 6 E
     // 1 2 3 D
     // 0 A B C
-    return SizedBox(
-      height: size.height / 2.55,
+    return Expanded(
       child: Container(
         decoration: BoxDecoration(
           color: colorBg,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(_appTheme.space),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _customButton('', style, colorBg, colorText),
                 _customButton('', style, colorBg, colorText),
-                _customButton('CE', style, colorBg, colorText),
+                _customButton('X', style, colorBg, colorText),
                 FlatButton(
                   onPressed: () => onPressedButton('-'),
                   color: colorBg,
                   child: RotatedBox(
                     quarterTurns: 2, // Rotate by 180 degrees
                     child: SizedBox(
-                      height: 58,
-                      width: 48,
                       child: Icon(
                         Icons.send,
-                        size: 40,
+                        size: textSize * 1.45,
                         color: colorText,
                       ),
                     ),
@@ -79,6 +77,7 @@ class _CustomKeyboardNumberSystemState
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _customButton('7', style, colorBg, colorText),
                 _customButton('8', style, colorBg, colorText),
@@ -87,6 +86,7 @@ class _CustomKeyboardNumberSystemState
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _customButton('4', style, colorBg, colorText),
                 _customButton('5', style, colorBg, colorText),
@@ -95,6 +95,7 @@ class _CustomKeyboardNumberSystemState
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _customButton('1', style, colorBg, colorText),
                 _customButton('2', style, colorBg, colorText),
@@ -103,6 +104,7 @@ class _CustomKeyboardNumberSystemState
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _customButton('0', style, colorBg, colorText),
                 _customButton('A', style, colorBg, colorText),
@@ -116,13 +118,15 @@ class _CustomKeyboardNumberSystemState
     );
   }
 
-  FlatButton _customButton(
+  Widget _customButton(
       String buttonText, TextStyle style, Color color, Color colorText) {
-    return FlatButton(
-      onPressed: () => onPressedButton(buttonText),
-      color: color,
-      child: Text(buttonText,
-          style: style.copyWith(color: colorOfButton(buttonText, colorText))),
+    return Expanded(
+      child: FlatButton(
+        onPressed: () => onPressedButton(buttonText),
+        color: color,
+        child: Text(buttonText,
+            style: style.copyWith(color: colorOfButton(buttonText, colorText))),
+      ),
     );
   }
 }

@@ -14,26 +14,23 @@ class CustomSubnetsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final _appTheme = context.watch<AppTheme>();
-    final _colorBg = _appTheme.getColorBg();
 
     List<String> _hosts = context.watch<CustomHosts>().hosts;
     _hosts.sort((f, s) => int.tryParse(s).compareTo(int.tryParse(f)));
 
     return SizedBox(
-      height: size.height / 1.56 - 1,
-      width: size.width / 1.2,
+      height: _appTheme.height / 1.56 - 1,
+      width: _appTheme.width / 1.2,
       child: Container(
-        color: _colorBg,
         child: ListView(
-          children: _customSubnetItems(_hosts),
+          children: _customSubnetItems(_hosts, space: _appTheme.space),
         ),
       ),
     );
   }
 
-  List<Widget> _customSubnetItems(List<String> _hosts) {
+  List<Widget> _customSubnetItems(List<String> _hosts, {double space = 15}) {
     String _lastSubnetAddress = IPLogic.firstSubnetAddress(ip, subnetMask);
     List<Widget> _customSubnetList = new List<Widget>();
 
@@ -67,7 +64,7 @@ class CustomSubnetsListView extends StatelessWidget {
                 ipisContained: isIPContained,
                 mask: _mask,
               ),
-              const SizedBox(height: 15)
+              SizedBox(height: space)
             ],
           ),
         );

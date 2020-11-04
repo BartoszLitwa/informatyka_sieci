@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sieci/main.dart';
 import 'package:sieci/screens/ip_address/ip_logic.dart';
 import 'package:sieci/screens/ip_address/subnet_item.dart';
+import 'package:provider/provider.dart';
 
 class SubnetsListView extends StatelessWidget {
   final String ip, subnetMask;
@@ -12,14 +14,15 @@ class SubnetsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final _appTheme = context.watch<AppTheme>();
 
     final int subnetMaskOnes = IPLogic.subnetMaskToInt(subnetMask);
     final String firstSubnetAddress =
         IPLogic.firstSubnetAddress(ip, subnetMask);
+
     return SizedBox(
-      height: size.height / 1.56 - 1,
-      width: size.width / 1.2,
+      height: _appTheme.height / 1.56 - 1,
+      width: _appTheme.width / 1.2,
       child: ListView.builder(
         itemCount: IPLogic.numberOfSubnets(subnetMaskOnes),
         itemBuilder: (buildContext, val) {
@@ -44,12 +47,10 @@ class SubnetsListView extends StatelessWidget {
                       numberOfHosts: hosts,
                       ipisContained: isIPContained,
                     ),
-                    const SizedBox(height: 15)
+                    SizedBox(height: _appTheme.space)
                   ],
                 )
-              : Container(
-                  height: 0,
-                );
+              : Container(height: 0);
         },
       ),
     );

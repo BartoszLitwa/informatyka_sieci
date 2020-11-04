@@ -28,12 +28,12 @@ class SubnetItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(_appTheme.space),
         color: ipisContained ? green : _colorBg,
       ),
       child: Column(
         children: [
-          const SizedBox(height: 5),
+          SizedBox(height: _appTheme.smallSpace),
           Center(
               child: Text(
                   'Podsieć ${subnet + 1}          ${mask != null ? '/$mask' : ''}',
@@ -60,19 +60,20 @@ class IconText extends StatelessWidget {
     final _style = _appTheme.getStyle();
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+      padding: EdgeInsets.symmetric(
+          horizontal: _appTheme.bigerSpace, vertical: _appTheme.smallerSpace),
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 5),
+            SizedBox(height: _appTheme.smallerSpace),
             icon != null
                 ? Icon(icon)
                 : Center(child: Text('$title: ', style: _style)),
-            const SizedBox(width: 5),
+            SizedBox(width: _appTheme.smallerSpace),
             Center(child: Text(text, style: _style)),
-            const SizedBox(height: 5),
+            SizedBox(height: _appTheme.smallerSpace),
           ],
         ),
       ),

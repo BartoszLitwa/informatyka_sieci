@@ -9,7 +9,6 @@ class DataTableCustomHosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final CustomHosts hosts = context.watch<CustomHosts>();
     final _appTheme = context.watch<AppTheme>();
     final _style = _appTheme.getStyle();
@@ -18,11 +17,11 @@ class DataTableCustomHosts extends StatelessWidget {
     final double fontSize =
         listOfRows.length > 9 ? (16.0 - (listOfRows.length - 9.0)) : 16.0;
     return SizedBox(
-      height: size.height / 2.85,
+      height: _appTheme.height / 2.85,
       child: DataTable(
-        dataTextStyle: blackStyle.copyWith(fontSize: 16),
-        headingTextStyle: blackStyle.copyWith(fontSize: 18),
-        columnSpacing: 40,
+        dataTextStyle: blackStyle.copyWith(fontSize: normalFontSize),
+        headingTextStyle: blackStyle.copyWith(fontSize: bigFontSize),
+        columnSpacing: _appTheme.width / 10,
         dataRowHeight: fontSize * 1.5,
         sortAscending: true,
         columns: <DataColumn>[
